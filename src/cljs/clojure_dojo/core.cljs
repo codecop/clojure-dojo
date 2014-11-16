@@ -13,11 +13,14 @@
 (defn todo-item-view [item owner]
   (reify
     om/IRenderState
-    (render-state [_ {:keys [change-queue]}]
-      (dom/li nil (:text item)
-              (dom/input #js{:type "checkbox"
-                             :checked (:done item)
-                             :onClick (fn [e] (put! change-queue item))})))))
+    (render-state [_ {:keys [comm]}]
+      (dom/li nil
+              (dom/div nil
+               (dom/input #js{:type "checkbox"
+                              :checked (:done item)
+                              :onClick (fn [e] (om/transact! item :done #(not %) ))})
+               (dom/label nil (:text item))
+               (dom/button #js {:onClick (fn [_] (put! comm [:delete @item]))} "x"))))))
 
 
 (defn add-item [app owner]
@@ -28,12 +31,15 @@
       (set! (.-value input) "")
       (.focus input))))
 
-(defn update-item-state [item new-state]
-  (fn [todos] (replace {item (assoc item :done new-state)} todos)))
-
-(defn delete-item [app to-delete]
+(defn delete-item [item app]
   (om/transact! app :todos
-                (fn [todos] (vec (remove #(= to-delete %) todos)))))
+              (fn [todos] (vec (remove #(= item %) todos)))))
+
+
+(defn handle-event [event value app]
+  (case event
+    :delete (delete-item value app)))
+
 
 
 (defn main []
@@ -42,28 +48,13 @@
       (reify
         om/IInitState
         (init-state [_]
-          {:change-queue (chan)
-           :delete-queue (chan 20)})
+          {:comm (chan)})
         om/IWillMount
         (will-mount [_]
-          (let [change-queue (om/get-state owner :change-queue)
-                delete-queue (om/get-state owner :delete-queue)]
-            (go (loop []
-                  
-                  (let [change-cursor (<! change-queue)
-                        to-change  @change-cursor
-                        new-state (not (:done  to-change))]
-                    (om/transact! app :todos
-                                  (update-item-state to-change new-state ))
-                    ;;deref again to get the new state
-                    (>! delete-queue @change-cursor)
-                    (recur))))
-            (go (loop []
-                  (let [to-delete (<! delete-queue)
-                        now (<! (timeout 2000))]
-                    (if to-delete
-                      (delete-item app  to-delete))
-                    (recur))))))
+          (let [comm (om/get-state owner :comm)]
+            (go (while true
+                  (let [[event value] (<! comm)]
+                    (handle-event event value app))))))
         om/IRenderState
         (render-state [_ state]
           (dom/div nil
