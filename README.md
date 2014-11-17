@@ -1,5 +1,12 @@
 # clojure-dojo
 
+This is project is based on a chestnut template. The only think I added is the nrepl middleware and a branch containing a first draft for a possible approach to the dojo.
+
+So if you prefer you can easily recreate the poject using chestnut directly:
+
+```sh
+lein new chestnut clojure-dojo
+```
 
 ## Development
 
