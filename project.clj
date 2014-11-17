@@ -16,7 +16,8 @@
                  [environ "1.0.0"]
                  [com.cemerick/piggieback "0.1.3"]
                  [weasel "0.4.0-SNAPSHOT"]
-                 [leiningen "2.5.0"]]
+                 [leiningen "2.5.0"]
+                 [lein-light-nrepl "0.1.0"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]
             [lein-environ "1.0.0"]]
@@ -35,7 +36,7 @@
                                         :pretty-print  true}}}}
 
   :profiles {:dev {:repl-options {:init-ns clojure-dojo.server
-                                  :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
+                                  :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl lighttable.nrepl.handler/lighttable-ops]}
 
                    :plugins [[lein-figwheel "0.1.4-SNAPSHOT"]]
 
