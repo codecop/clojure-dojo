@@ -8,7 +8,8 @@
 (defonce app-state (atom {:text "Hello Chestnut!"
                           :todos ["Milch kaufen" "Auto waschen"]}))
 
-(defn a-todo-item [app owner]
+(defn dom-todo-item [todo]
+  (dom/li nil todo)
 )
 
 (defn main []
@@ -20,11 +21,7 @@
           (dom/div nil
                    (dom/h1 nil (:text app))
                    (apply dom/ul nil 
-                            (map
-                              (fn [todo]
-                                todo
-                              )
-                              (:todos app)))))
+                            (map dom-todo-item (:todos app)))))
       )
     )
     app-state
