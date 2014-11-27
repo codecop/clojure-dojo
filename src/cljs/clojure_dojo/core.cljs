@@ -5,8 +5,11 @@
             [cljs.core.async :refer [put! chan <! timeout]]
             [clojure.string :as string]))
 
-(defonce app-state (atom {:text "Hello Chestnut!"
-                          :todos ["Milch kaufen" "Auto waschen"]}))
+(defonce app-state
+  (atom {:text "All the things I have to do:"
+         :todos ["buy milk" "wash car"]}
+  )
+)
 
 (defn dom-todo-item [todo]
   (dom/li nil todo)
