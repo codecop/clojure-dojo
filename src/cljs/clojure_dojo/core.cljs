@@ -12,6 +12,12 @@
   (dom/li nil todo)
 )
 
+(defn om-todo-item [todo owner]
+  (om/component
+    (dom-todo-item todo)
+  )
+)
+
 (defn main []
   (om/root
     (fn [app owner]
@@ -19,9 +25,10 @@
        om/IRenderState
         (render-state [_ state]
           (dom/div nil
-                   (dom/h1 nil (:text app))
-                   (apply dom/ul nil 
-                            (map dom-todo-item (:todos app)))))
+            (dom/h1 nil (:text app))
+            (apply dom/ul nil 
+              (om/build-all om-todo-item (:todos app))))
+        )
       )
     )
     app-state
