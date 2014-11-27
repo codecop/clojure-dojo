@@ -18,6 +18,10 @@
   )
 )
 
+(defn click-clear-all [event]
+ (js/alert "cleared!") 
+)
+
 (defn main []
   (om/root
     (fn [app owner]
@@ -27,7 +31,9 @@
           (dom/div nil
             (dom/h1 nil (:text app))
             (apply dom/ul nil 
-              (om/build-all om-todo-item (:todos app))))
+              (om/build-all om-todo-item (:todos app)))
+            (dom/button #js {:onClick click-clear-all } "I have done everything! (Clear)")
+          )
         )
       )
     )
