@@ -17,7 +17,8 @@
                  [com.cemerick/piggieback "0.1.3"]
                  [weasel "0.4.0-SNAPSHOT"]
                  [leiningen "2.5.0"]
-                 [lein-light-nrepl "0.1.0"]]
+                 [lein-light-nrepl "0.1.0"]
+                 [enlive "1.1.5b"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]
             [lein-environ "1.0.0"]]
