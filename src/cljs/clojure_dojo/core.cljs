@@ -22,9 +22,7 @@
 )
 
 (defn clear-all [app]
-  (om/transact! app :todos
-    (fn [todos] [])
-  )
+  (om/update! app :todos [] )
 )
 
 (defn main []
@@ -35,7 +33,7 @@
         (render-state [_ state]
           (dom/div nil
             (dom/h1 nil (:text app))
-            (apply dom/ul nil 
+            (apply dom/ul nil
               (om/build-all om-todo-item (:todos app)))
             (dom/button #js {:onClick (fn [e] (clear-all app)) }
                         "I have done everything! (Clear)")
